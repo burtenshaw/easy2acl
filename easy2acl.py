@@ -56,10 +56,15 @@ accepted = []
 with open('accepted') as accepted_file:
     for line in accepted_file:
         entry = line.split("\t")
-        submission_id = entry[0]
-        title = entry[1]
+        # modified here to filter out the rejected files rather than doing
+        # that by hand
+        if entry[-1][0] == "A": # if it's "ACCEPT"
+            #print(entry[-1])
+            submission_id = entry[0]
+            title = entry[1]
 
-        accepted.append((submission_id, title))
+            accepted.append((submission_id, title))
+    print("Found ", len(accepted), " accepted files")
 
 #,----
 #| Append each submission, as a tuple, to the 'submissions' list.
@@ -86,6 +91,7 @@ with open('submissions') as submissions_file:
             authors_clean.append((author_last_name, author_first_name))
 
         submissions.append((submission_id, title, authors_clean))
+    print("Found ", len(submissions), " submitted files")
 
 #,----
 #| Append a tuple of information about each PDFs into list 'pdfs'.
@@ -129,7 +135,9 @@ for a in accepted:
             copy(current_path, final_path)
             break
 
-Popen(['tar', '-czf', 'final.tar.gz', 'final'])
+# Modified to make this wait before exiting.
+myprocess = Popen(['tar', '-czf', 'final.tar.gz', 'final'])
+myprocess.wait()
 rmtree('final')
 
 #,----
