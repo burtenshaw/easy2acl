@@ -38,7 +38,7 @@ It is your responsibility to make sure that the `db` file is correct. The author
 
 * **Order of author name internally, as in `<first> <last>`, in EasyChair is incorrect.** This can cause problems with the order of the papers since they are written to the `db` file in alphabetical order according to the first author's last name.
 
-* **Author has multiple names before the last name, e.g. `<first> <middle> <last>`.** This can cause problems with the order of the papers since they are written in alphabetical order according to the first author's last name. The script assumes the format `<first> <last> [<last>] [<last>] ...`.
+* **Author has multiple names before the last name, e.g. `<first> <middle> <last>`.** This can cause problems with the order of the papers since they are written in alphabetical order according to the first author's last name. The script assumes the format `<first> [<first> <first> ...] <last>`.
     
 * **Some diacritics and special characters in names are not converted by the script.** Certain characters that you expected to be translated into LaTeX escape codes, but were not, might be because they are not handled in the unicode_tex package. Make sure that the name was properly written in EasyChair; it might be that the person who entered the name forgot to add diacritics. If you want to be nice, you can check the names in your resulting `db` file against the names of the actual submissions and make the appropriate changes to the `db` file.
 
