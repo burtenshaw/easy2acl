@@ -4,6 +4,7 @@
 #| easy2acl.py - Convert data from EasyChair for use with aclpub                
 #|                                                                              
 #| Author: Nils Blomqvist
+#| Forked/modified by: Asad Sayeed
 #|                                                                              
 #| Documentation
 #| -------------
@@ -80,13 +81,14 @@ with open('submissions') as submissions_file:
 
         authors_clean = []
         for author in authors:
+            # Authors' last names *tend* to be the last last name.
             author_fullname = author.split(' ')
-            author_first_name = author_fullname[0]
-            author_last_name = ''
+            author_first_name = ''
+            author_last_name = author_fullname[-1]
 
-            for last in author_fullname[1:]:
-                author_last_name += last + ' '
-            author_last_name.strip()
+            for first in author_fullname[:-1]:
+                author_first_name += first + ' '
+            author_first_name.strip()
                 
             authors_clean.append((author_last_name, author_first_name))
 
