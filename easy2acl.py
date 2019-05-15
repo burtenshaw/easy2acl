@@ -162,21 +162,26 @@ for entry in final_papers:
 
     anthology_id = os.path.basename(dest_path).replace('.pdf', '')
 
-    bib_entry = BibliographyData({
-        anthology_id : Entry('inproceedings', [
-            ('author', texify(authors)),
-            ('title', paper_title),
-            ('booktitle', metadata['booktitle']),
-            ('year', metadata['year']),
-            ('month', metadata['month']),
-            ('address', metadata['location']),
-            ('publisher', metadata['publisher']),
-            ('abstract', abstracts.get(submission_id, ''))
-        ]),
-    })
+    bib_type = 'inproceedings' if submission_id != '0' else 'proceedings'
+    bib_entry = Entry(bib_type, [
+        ('author', texify(authors)),
+        ('title', paper_title),
+        ('year', metadata['year']),
+        ('month', metadata['month']),
+        ('address', metadata['location']),
+        ('publisher', metadata['publisher']),
+    ])
+
+    # Add the abstract if present
+    if submission_id in abstracts:
+        bib_entry.fields['abstract'] = abstracts.get(submission_id)
+
+    # Add booktitle for non-proceedings entries
+    if bib_type == 'inproceedings':
+        bib_entry.fields['booktitle'] = metadata['booktitle']
 
     try:
-        bib_string = bib_entry.to_string('bibtex')
+        bib_string = BibliographyData({ anthology_id: bib_entry }).to_string('bibtex')
     except TypeError as e:
         print('Fatal: Error in BibTeX-encoding paper', submission_id, file=sys.stderr)
         sys.exit(1)
