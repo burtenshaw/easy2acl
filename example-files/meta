@@ -1,0 +1,14 @@
+abbrev IWCS
+type Main Conference
+title The 13th International Conference on Computational Semantics
+url https://sites.google.com/view/iwcs2019/home
+booktitle Proceedings of the 13th International Conference on Computational Semantics - Short Papers
+month 23--27 May
+year 2019
+location Gothenburg, Sweden
+publisher Association for Computational Linguistics
+chairs Dobnik, Simon
+chairs Chatzikyriakidis, Stergios
+chairs Demberg, Vera
+bib_url https://www.aclweb.org/anthology/W19-05%02d
+sig sigsem

@@ -1,58 +1,13 @@
 #!/usr/bin/env python3
 
-#,----
-#| easy2acl.py - Convert data from EasyChair for use with ACLPUB
-#|
-#| Author: Nils Blomqvist
-#| Forked/modified by: Asad Sayeed
-#| Further modifications and docs (for 2019 Anthology): Matt Post
-#|
-#| Documentation
-#| -------------
-#| Full documentation at http://github.com/nblomqvist/easy2acl.
-#|
-#| Quick reference
-#| ---------------
-#| Before running this script, your file structure should look like this:
-#|
-#| |-- easy2acl.py
-#| |-- meta                           # metadata
-#| |-- submissions                    # copied list of submission
-#| |-- accepted                       # copied list of accepted papers
-#| `-- pdf
-#|     |-- ${abbrev}_${year}.pdf              # full volume
-#|     |-- ${abbrev}_${year}_frontmatter.pdf  # front matter (optional)
-#|     |-- ${abbrev}_${year}_paper_1.pdf      # paper 1
-#|     |-- ${abbrev}_${year}_paper_2.pdf      # paper 2
-#|     `-- ...
-#|
-#| (where ${abbrev} and ${year} are defined in the `meta` file.)
-#|
-#| Run the script:
-#|
-#|     $ ./easy2acl.py
-#|
-#| When the script has finished, you will see the following additional files:
-#|
-#| |-- cdrom/
-#|     |-- ${abbrev}-${year}.bib     # all bib entries
-#|     |-- ${abbrev}-${year}.pdf     # entire volume
-#|     |-- bib/
-#|     |   |-- W19-1000.bib          # frontmatter
-#|     |   |-- W19-1001.bib
-#|     |   |-- W19-1002.bib
-#|     |   `-- ...
-#|     `-- pdf/
-#|         |-- W19-1000.pdf          # frontmatter
-#|         |-- W19-1001.pdf
-#|         |-- W19-1002.pdf
-#|         `-- ...
-#|
-#| The names of the files above are determined by the `bib_url` line in the `meta`
-#| file. See below for more information.
-#|
-#| At this point, your code will be ready to run `anthologize.pl`. See
-#| Step 3 in the [ACLPUB repo](https://github.com/acl-org/ACLPUB/blob/master/anthologize/README.md). 
+#
+# easy2acl.py - Convert data from EasyChair for use with ACLPUB
+#
+# Original Author: Nils Blomqvist
+# Forked/modified by: Asad Sayeed
+# Further modifications and docs (for 2019 Anthology): Matt Post
+#
+# Please see the documentation in the README file at http://github.com/acl-org/easy2acl.
 
 import os
 import re
@@ -70,13 +25,7 @@ def texify(string):
 
     """
     return ' '.join(map(unicode_to_tex, string.split()))
-    # output = ''
 
-    # for w in string.split():
-    #     output += unicode_to_tex(w) + ' '
-    # output = output.rstrip()
-
-    # return output
 
 #,----
 #| Metadata
