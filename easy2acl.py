@@ -1,66 +1,114 @@
 #!/usr/bin/env python3
 
 #,----
-#| easy2acl.py - Convert data from EasyChair for use with aclpub                
-#|                                                                              
+#| easy2acl.py - Convert data from EasyChair for use with ACLPUB
+#|
 #| Author: Nils Blomqvist
 #| Forked/modified by: Asad Sayeed
-#|                                                                              
+#| Further modifications and docs (for 2019 Anthology): Matt Post
+#|
 #| Documentation
 #| -------------
-#| Full documentation at http://github.com/nblomqvist/easy2acl.    
-#|                                                                              
-#| Quick reference                                                              
-#| ---------------                                                              
-#| Before running this script, your file structure should look like this:       
-#|                                                                              
-#| |-- easy2acl.py                                                              
-#| |-- submissions                                                              
-#| |-- accepted                                                                 
-#| `-- pdf                                                                      
-#|     |-- ..._submission_1.pdf                                                 
-#|     |-- ..._submission_2.pdf                                                 
-#|     `-- ...                                                                  
-#|                                                                              
-#| Run the script:                                                              
-#|                                                                              
-#|     $ ./easy2acl.py                                                          
-#|                                                                              
-#| When the script has finished, you will find the files 'db' and 'final.tar.gz'
-#| in the same folder.                                                          
-#`----
+#| Full documentation at http://github.com/nblomqvist/easy2acl.
+#|
+#| Quick reference
+#| ---------------
+#| Before running this script, your file structure should look like this:
+#|
+#| |-- easy2acl.py
+#| |-- meta                           # metadata
+#| |-- submissions                    # copied list of submission
+#| |-- accepted                       # copied list of accepted papers
+#| `-- pdf
+#|     |-- ${abbrev}_${year}.pdf              # full volume
+#|     |-- ${abbrev}_${year}_frontmatter.pdf  # front matter (optional)
+#|     |-- ${abbrev}_${year}_paper_1.pdf      # paper 1
+#|     |-- ${abbrev}_${year}_paper_2.pdf      # paper 2
+#|     `-- ...
+#|
+#| (where ${abbrev} and ${year} are defined in the `meta` file.)
+#|
+#| Run the script:
+#|
+#|     $ ./easy2acl.py
+#|
+#| When the script has finished, you will see the following additional files:
+#|
+#| |-- cdrom/
+#|     |-- ${abbrev}-${year}.bib     # all bib entries
+#|     |-- ${abbrev}-${year}.pdf     # entire volume
+#|     |-- bib/
+#|     |   |-- W19-1000.bib          # frontmatter
+#|     |   |-- W19-1001.bib
+#|     |   |-- W19-1002.bib
+#|     |   `-- ...
+#|     `-- pdf/
+#|         |-- W19-1000.pdf          # frontmatter
+#|         |-- W19-1001.pdf
+#|         |-- W19-1002.pdf
+#|         `-- ...
+#|
+#| The names of the files above are determined by the `bib_url` line in the `meta`
+#| file. See below for more information.
 
+import os
+import re
+import sys
+
+from glob import glob
 from shutil import copy, rmtree
-from subprocess import Popen
-from os import mkdir, path, listdir
-from PyPDF2 import PdfFileReader
 from unicode_tex import unicode_to_tex
+from pybtex.database import BibliographyData, Entry
+
 
 def texify(string):
     """Return a modified version of the argument string where non-ASCII symbols have
     been converted into LaTeX escape codes.
 
     """
-    output = ''
-    
-    for w in string.split():
-        output += unicode_to_tex(w) + ' '
-    output = output.strip()
-    
-    return output
+    return ' '.join(map(unicode_to_tex, string.split()))
+    # output = ''
+
+    # for w in string.split():
+    #     output += unicode_to_tex(w) + ' '
+    # output = output.rstrip()
+
+    # return output
+
+#,----
+#| Metadata
+#`----
+metadata = { 'chairs': [] }
+with open('meta') as metadata_file:
+    for line in metadata_file:
+        key, value = line.rstrip().split(maxsplit=1)
+        if key == 'chairs':
+            metadata[key].append(value)
+        else:
+            metadata[key] = value
+
+for key in 'abbrev title booktitle month year location publisher chairs bib_url'.split():
+    if key not in metadata:
+        print('Fatal: missing key "{}" from "meta" file'.format(key))
+        sys.exit(1)
+
+match = re.match(r'https://www.aclweb.org/anthology/([A-Z])(\d\d)-(\d+)%0(\d+)d', metadata['bib_url'])
+if match is None:
+    print("Fatal: bib_url field ({}) in 'meta' file has wrong pattern".format(metadata['bib_url']), file=sys.stderr)
+    sys.exit(1)
+anthology_collection, anthology_year, anthology_volume, anthology_paper_width = match.groups()
 
 #,----
 #| Append each accepted submission, as a tuple, to the 'accepted' list.
 #`----
-accepted = []             
+accepted = []
 
 with open('accepted') as accepted_file:
     for line in accepted_file:
-        entry = line.split("\t")
+        entry = line.rstrip().split("\t")
         # modified here to filter out the rejected files rather than doing
         # that by hand
-        if entry[-1][0] == "A": # if it's "ACCEPT"
-            #print(entry[-1])
+        if entry[-1] == 'ACCEPT':
             submission_id = entry[0]
             title = entry[1]
 
@@ -74,102 +122,112 @@ submissions = []
 
 with open('submissions') as submissions_file:
     for line in submissions_file:
-        entry = line.split("\t")
+        entry = line.rstrip().split("\t")
         submission_id = entry[0]
         authors = entry[1].replace(' and', ',').split(', ')
         title = entry[2]
 
-        authors_clean = []
-        for author in authors:
-            # Authors' last names *tend* to be the last last name.
-            author_fullname = author.split(' ')
-            author_first_name = ''
-            author_last_name = author_fullname[-1]
-
-            for first in author_fullname[:-1]:
-                author_first_name += first + ' '
-            author_first_name.strip()
-                
-            authors_clean.append((author_last_name, author_first_name))
-
-        submissions.append((submission_id, title, authors_clean))
+        submissions.append((submission_id, title, authors))
     print("Found ", len(submissions), " submitted files")
 
-#,----
-#| Append a tuple of information about each PDFs into list 'pdfs'.
-#`----
-pdfs = []
+#
+# Find all relevant PDFs
+#
 
-for pdf in listdir('pdf'):
-    current_path = path.join('pdf', pdf)
-    file = PdfFileReader(open(current_path, 'rb'))
+# The PDF of the full proceedings
+full_pdf_file = 'pdf/{abbrev}_{year}.pdf'.format(abbrev=metadata['abbrev'],
+                                                 year=metadata['year'])
+if not os.path.exists(full_pdf_file):
+    print("Fatal: could not find full volume PDF '{}'".format(full_pdf_file))
+    sys.exit(1)
 
-    no_of_pages = file.getNumPages()
-    submission_id = pdf[:-4].rsplit('_', 1)[1]
-    final_path = path.join('final', pdf)
+# The PDF of the frontmatter
+frontmatter_pdf_file = 'pdf/{abbrev}_{year}_frontmatter.pdf'.format(abbrev=metadata['abbrev'],
+                                                                    year=metadata['year'])
+if not os.path.exists(frontmatter_pdf_file):
+    final_papers.insert(0, frontmatter_pdf_file)
+    print("Fatal: could not find frontmatter PDF file '{}'".format(frontmatter_pdf_file))
+    sys.exit(1)
 
-    pdfs.append((submission_id, no_of_pages, current_path, final_path))
+# File locations of all PDFs (seeded with PDF for frontmatter)
+pdfs = { '0': frontmatter_pdf_file }
+for pdf_file in glob('pdf/{abbrev}_{year}_paper_*.pdf'.format(abbrev=metadata['abbrev'], year=metadata['year'])):
+    submission_id = pdf_file.split('_')[-1].replace('.pdf', '')
+    pdfs[submission_id] = pdf_file
 
-#,----
-#| Add the submissions whose submission ID is found in the 'accepted' list to a
-#| new list 'final_papers'. A match must made for both the submission ID and the
-#| title (just in case).
-#|                                                                           
-#| Copy the PDFs whose submission ID is found in the 'accepted' list to a
-#| directory 'final'.
-#|                                                                           
-#| Finally, compress the 'final' directory into 'final.tar.gz' and remove folder
-#| 'final'.
-#`----
-final_papers = []
-mkdir('final')
+# List of accepted papers (seeded with frontmatter)
+final_papers = [ ('0', metadata['booktitle'], metadata['chairs']) ]
 
 for a in accepted:
     for s in submissions:
         if s[0] == a[0] and s[1] == a[1]:
             final_papers.append(s)
             break
-    for p in pdfs:
-        if p[0] == a[0]:
-            current_path = p[2]
-            final_path = p[3]
 
-            copy(current_path, final_path)
-            break
+#
+# Create Anthology tarball
+#
 
-# Modified to make this wait before exiting.
-myprocess = Popen(['tar', '-czf', 'final.tar.gz', 'final'])
-myprocess.wait()
-rmtree('final')
+# Create destination directories
+for dir in ['bib', 'pdf']:
+    dest_dir = os.path.join('proceedings/cdrom', dir)
+    if not os.path.exists(dest_dir):
+        os.makedirs(dest_dir)
 
-#,----
-#| Write the db file.
-#|                                                                         
-#| Sort papers naturally by key 'first author's last name'.
-#`----
-final_papers = sorted(final_papers, key=lambda paper: paper[2][0][0])
+# Copy over "meta" file
+print('COPYING meta -> proceedings/meta', file=sys.stderr)
+copy('meta', 'proceedings/meta')
 
-with open('db', 'w') as db:
-    for paper in final_papers:
-        id = paper[0]
-        title = texify(paper[1])
-        authors = paper[2]
-        
-        db.write('P: ' + id + '\n')
-        db.write('T: ' + title + '\n')
-        for author in authors:
-            lastname = texify(author[0])
-            firstname = texify(author[1])
-            
-            db.write('A: ' + lastname + ', ' + firstname + '\n')
+paper_id = 0  # maps system paper IDs (random) to Anthology IDs (starting at 1)
+final_bibs = []
+for entry in final_papers:
+    submission_id, paper_title, authors = entry
+    authors = ' and '.join(authors)
+    if not submission_id in pdfs:
+        print('Fatal: no PDF found for paper', paper_id, file=sys.stderr)
+        sys.exit(1)
 
-        for pdf in pdfs:
-            if paper[0] == pdf[0]:
-                path = pdf[3]
-                length = str(pdf[1])
-                
-                db.write('F: ' + path + '\n')
-                db.write('L: ' + length + '\n')
-                break
+    pdf_path = pdfs[submission_id]
+    formatted_id = '{paper_id:0{width}d}'.format(paper_id=paper_id, width=anthology_paper_width)
+    dest_path = 'proceedings/cdrom/pdf/{letter}{year}-{workshop_id}{paper_id}.pdf'.format(letter=anthology_collection, year=anthology_year, workshop_id=anthology_volume, paper_id=formatted_id)
+    paper_id += 1
 
-        db.write('\n')
+    copy(pdf_path, dest_path)
+    print('COPYING', pdf_path, '->', dest_path, file=sys.stderr)
+
+    bib_path = dest_path.replace('pdf', 'bib')
+    if not os.path.exists(os.path.dirname(bib_path)):
+        os.makedirs(os.path.dirname(bib_path))
+
+    anthology_id = os.path.basename(dest_path)
+
+    bib_entry = BibliographyData({
+        anthology_id : Entry('inproceedings', [
+            ('author', texify(authors)),
+            ('title', paper_title),
+            ('booktitle', metadata['booktitle']),
+            ('year', metadata['year']),
+            ('month', metadata['month']),
+            ('address', metadata['location']),
+            ('publisher', metadata['publisher']),
+        ]),
+    })
+
+    try:
+        bib_string = bib_entry.to_string('bibtex')
+    except TypeError as e:
+        print('Error encoding', authors)
+    final_bibs.append(bib_string)
+    with open(bib_path, 'w') as out_bib:
+        print(bib_string, file=out_bib)
+
+# Write the volume-level bib with all the entries
+dest_bib = 'proceedings/cdrom/{abbrev}-{year}.bib'.format(abbrev=metadata['abbrev'],
+                                                          year=metadata['year'])
+with open(dest_bib, 'w') as whole_bib:
+    print('\n'.join(final_bibs), file=whole_bib)
+
+# Copy over the volume-level PDF
+dest_pdf = dest_bib.replace('bib', 'pdf')
+print('COPYING', full_pdf_file, '->', dest_pdf, file=sys.stderr)
+copy(full_pdf_file, dest_pdf)
