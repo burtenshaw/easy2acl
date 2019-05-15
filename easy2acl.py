@@ -13,6 +13,7 @@ import os
 import re
 import sys
 
+from csv import DictReader
 from glob import glob
 from shutil import copy, rmtree
 from unicode_tex import unicode_to_tex
@@ -82,6 +83,15 @@ with open('submissions') as submissions_file:
         submissions.append((submission_id, title, authors))
     print("Found ", len(submissions), " submitted files")
 
+# Read abstracts
+abstracts = {}
+if os.path.exists('submission.csv'):
+    with open('submission.csv') as csv_file:
+        d = DictReader(csv_file)
+        for row in d:
+            abstracts[row['#']] = row['abstract']
+    print('Found ', len(abstracts), 'abstracts')
+
 #
 # Find all relevant PDFs
 #
@@ -150,7 +160,7 @@ for entry in final_papers:
     if not os.path.exists(os.path.dirname(bib_path)):
         os.makedirs(os.path.dirname(bib_path))
 
-    anthology_id = os.path.basename(dest_path)
+    anthology_id = os.path.basename(dest_path).replace('.pdf', '')
 
     bib_entry = BibliographyData({
         anthology_id : Entry('inproceedings', [
@@ -161,22 +171,26 @@ for entry in final_papers:
             ('month', metadata['month']),
             ('address', metadata['location']),
             ('publisher', metadata['publisher']),
+            ('abstract', abstracts.get(submission_id, ''))
         ]),
     })
 
     try:
         bib_string = bib_entry.to_string('bibtex')
     except TypeError as e:
-        print('Error encoding', authors)
+        print('Fatal: Error in BibTeX-encoding paper', submission_id, file=sys.stderr)
+        sys.exit(1)
     final_bibs.append(bib_string)
     with open(bib_path, 'w') as out_bib:
         print(bib_string, file=out_bib)
+        print('CREATED', bib_path)
 
 # Write the volume-level bib with all the entries
 dest_bib = 'proceedings/cdrom/{abbrev}-{year}.bib'.format(abbrev=metadata['abbrev'],
                                                           year=metadata['year'])
 with open(dest_bib, 'w') as whole_bib:
     print('\n'.join(final_bibs), file=whole_bib)
+    print('CREATED', dest_bib)
 
 # Copy over the volume-level PDF
 dest_pdf = dest_bib.replace('bib', 'pdf')
