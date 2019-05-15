@@ -21,8 +21,8 @@ Before running `easy2acl.py`, your file structure should look like this:
     |-- submissions.csv     # (optional) to include abstracts
     |-- accepted            # copied list of accepted papers
     `-- pdf
-        |-- ${abbrev}_${year}.pdf              # full volume
-        |-- ${abbrev}_${year}_frontmatter.pdf  # front matter (optional)
+        |-- ${abbrev}_${year}.pdf              # full volume of consolidated PDFs
+        |-- ${abbrev}_${year}_frontmatter.pdf  # front matter of proceedings
         |-- ${abbrev}_${year}_submission_1.pdf
         |-- ${abbrev}_${year}_submission_2.pdf
         `-- ...
