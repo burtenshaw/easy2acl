@@ -50,6 +50,9 @@
 #|
 #| The names of the files above are determined by the `bib_url` line in the `meta`
 #| file. See below for more information.
+#|
+#| At this point, your code will be ready to run `anthologize.pl`. See
+#| Step 3 in the [ACLPUB repo](https://github.com/acl-org/ACLPUB/blob/master/anthologize/README.md). 
 
 import os
 import re
