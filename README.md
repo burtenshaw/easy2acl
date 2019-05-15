@@ -54,7 +54,12 @@ We now have information about all the submissions but not whether they are accep
 
 ### A list of the accepted submissions
 
-Go to _Status -> All papers_. Here we find the information on what submissions are accepted. Copy the content of this table as you did with the previous one. Save the content as `accepted`, and make sure that each row in the table corresponds to one line in the resulting file. A sample `accepted` file is available [here](example-files/accepted).
+Go to _Status -> All papers_. 
+Here we find the information on what submissions are accepted. 
+Copy the content of this table as you did with the previous one. Save the content as `accepted`, and make sure that each row in the table corresponds to one line in the resulting file. 
+A sample `accepted` file is available [here](example-files/accepted).
+**Please note**: the generated proceedings will order the papers in the order they are found in this file.
+Please reorder the entires in `accepted' according to the order you would like them displayed (typically, the order they are presented in the program).
 
 ### A short explanation of the steps above
 
