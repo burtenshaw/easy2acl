@@ -148,7 +148,6 @@ if not os.path.exists(full_pdf_file):
 frontmatter_pdf_file = 'pdf/{abbrev}_{year}_frontmatter.pdf'.format(abbrev=metadata['abbrev'],
                                                                     year=metadata['year'])
 if not os.path.exists(frontmatter_pdf_file):
-    final_papers.insert(0, frontmatter_pdf_file)
     print("Fatal: could not find frontmatter PDF file '{}'".format(frontmatter_pdf_file))
     sys.exit(1)
 
