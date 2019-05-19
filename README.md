@@ -18,7 +18,7 @@ Before running `easy2acl.py`, your file structure should look like this:
 
     |-- meta                # conference metadata
     |-- submissions         # copied list of submissions
-    |-- submissions.csv     # (optional) to include abstracts
+    |-- submission.csv     # (optional) to include abstracts
     |-- accepted            # copied list of accepted papers
     `-- pdf
         |-- ${abbrev}_${year}.pdf              # full volume of consolidated PDFs
@@ -97,7 +97,7 @@ Please reorder the entires in `accepted' according to the order you would like t
 ### Abstracts
 
 If you wish to have abstracts included on the Anthology paper pages ([example](https://www.aclweb.org/anthology/P18-1020/)), you will need to provide that information to the script.
-This information can be found in the file `submissions.csv` (it is possible this is only available with the paid version of Easychair).
+This information can be found in the file `submission.csv` (it is possible this is only available with the paid version of Easychair).
 Place this file in the directory as described above.
 If present, the abstracts will be generated into the BibTeX files for ingestion by the Anthology scripts.
 
