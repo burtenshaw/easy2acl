@@ -196,6 +196,24 @@ for paper_id, entry in enumerate(accepted):
         print(bib_string, file=out_bib)
         print('CREATED', bib_path)
 
+# Create
+if not os.path.exists('book-proceedings'):
+    os.makedirs('book-proceedings')
+
+with open('book-proceedings/all_papers.tex', 'w') as book_file:
+    for entry in accepted:
+        submission_id, paper_title, authors = entry
+        if submission_id == '0':
+            continue
+        if len(authors) > 1:
+            authors = ', '.join(authors[:-1]) + ' and ' + authors[-1]
+        else:
+            authors = authors[0]
+
+        print("""\goodpaper{{../{pdf_file}}}{{{title}}}%
+{{{authors}}}\n""".format(authors=texify(authors), pdf_file=pdfs[submission_id], title=texify(paper_title)), file=book_file)
+
+
 # Write the volume-level bib with all the entries
 dest_bib = 'proceedings/cdrom/{abbrev}-{year}.bib'.format(abbrev=metadata['abbrev'],
                                                           year=metadata['year'])
