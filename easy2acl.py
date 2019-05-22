@@ -18,6 +18,7 @@ from glob import glob
 from shutil import copy, rmtree
 from unicode_tex import unicode_to_tex
 from pybtex.database import BibliographyData, Entry
+from PyPDF2 import PdfFileReader
 
 
 def texify(string):
@@ -25,7 +26,7 @@ def texify(string):
     been converted into LaTeX escape codes.
 
     """
-    return ' '.join(map(unicode_to_tex, string.split()))
+    return ' '.join(map(unicode_to_tex, string.split())).replace(r'\textquotesingle', "'")
 
 
 #,----
@@ -51,9 +52,25 @@ if match is None:
     sys.exit(1)
 anthology_collection, anthology_year, anthology_volume, anthology_paper_width = match.groups()
 
-#,----
-#| Append each accepted submission, as a tuple, to the 'accepted' list.
-#`----
+#
+# Build a dictionary of submissions (which has author information).
+#
+submissions = {}
+
+with open('submissions') as submissions_file:
+    for line in submissions_file:
+        entry = line.rstrip().split("\t")
+        submission_id = entry[0]
+        authors = entry[1].replace(' and', ',').split(', ')
+        title = entry[2]
+
+        submissions[submission_id] = (title, authors)
+    print("Found ", len(submissions), " submitted files")
+
+#
+# Append each accepted submission, as a tuple, to the 'accepted' list.
+# Order in this file is used to determine program order.
+#
 accepted = []
 
 with open('accepted') as accepted_file:
@@ -64,24 +81,10 @@ with open('accepted') as accepted_file:
         if entry[-1] == 'ACCEPT':
             submission_id = entry[0]
             title = entry[1]
+            authors = submissions[submission_id][1]
 
-            accepted.append((submission_id, title))
+            accepted.append((submission_id, title, authors))
     print("Found ", len(accepted), " accepted files")
-
-#,----
-#| Append each submission, as a tuple, to the 'submissions' list.
-#`----
-submissions = []
-
-with open('submissions') as submissions_file:
-    for line in submissions_file:
-        entry = line.rstrip().split("\t")
-        submission_id = entry[0]
-        authors = entry[1].replace(' and', ',').split(', ')
-        title = entry[2]
-
-        submissions.append((submission_id, title, authors))
-    print("Found ", len(submissions), " submitted files")
 
 # Read abstracts
 abstracts = {}
@@ -91,6 +94,8 @@ if os.path.exists('submission.csv'):
         for row in d:
             abstracts[row['#']] = row['abstract']
     print('Found ', len(abstracts), 'abstracts')
+else:
+    print('No abstracts available.')
 
 #
 # Find all relevant PDFs
@@ -117,13 +122,7 @@ for pdf_file in glob('pdf/{abbrev}_{year}_paper_*.pdf'.format(abbrev=metadata['a
     pdfs[submission_id] = pdf_file
 
 # List of accepted papers (seeded with frontmatter)
-final_papers = [ ('0', metadata['booktitle'], metadata['chairs']) ]
-
-for a in accepted:
-    for s in submissions:
-        if s[0] == a[0] and s[1] == a[1]:
-            final_papers.append(s)
-            break
+accepted.insert(0, ('0', metadata['booktitle'], metadata['chairs']))
 
 #
 # Create Anthology tarball
@@ -139,9 +138,9 @@ for dir in ['bib', 'pdf']:
 print('COPYING meta -> proceedings/meta', file=sys.stderr)
 copy('meta', 'proceedings/meta')
 
-paper_id = 0  # maps system paper IDs (random) to Anthology IDs (starting at 1)
 final_bibs = []
-for entry in final_papers:
+start_page = 1
+for paper_id, entry in enumerate(accepted):
     submission_id, paper_title, authors = entry
     authors = ' and '.join(authors)
     if not submission_id in pdfs:
@@ -151,7 +150,6 @@ for entry in final_papers:
     pdf_path = pdfs[submission_id]
     formatted_id = '{paper_id:0{width}d}'.format(paper_id=paper_id, width=anthology_paper_width)
     dest_path = 'proceedings/cdrom/pdf/{letter}{year}-{workshop_id}{paper_id}.pdf'.format(letter=anthology_collection, year=anthology_year, workshop_id=anthology_volume, paper_id=formatted_id)
-    paper_id += 1
 
     copy(pdf_path, dest_path)
     print('COPYING', pdf_path, '->', dest_path, file=sys.stderr)
@@ -171,6 +169,14 @@ for entry in final_papers:
         ('address', metadata['location']),
         ('publisher', metadata['publisher']),
     ])
+
+    # Add page range if not frontmatter
+    if paper_id > 0:
+        with open(pdf_path, 'rb') as in_:
+            file = PdfFileReader(in_)
+            last_page = start_page + file.getNumPages() - 1
+            bib_entry.fields['pages'] = '{}--{}'.format(start_page, last_page)
+            start_page = last_page + 1
 
     # Add the abstract if present
     if submission_id in abstracts:
