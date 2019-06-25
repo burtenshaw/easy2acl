@@ -1,0 +1,393 @@
+%%%% SemDial Proceedings template by Raquel Fernández, 2013.
+%%%% Modified by Simon Dobnik for the proceedings of IWCS 2019.
+
+\documentclass[a4paper,11pt,oneside]{book}
+\usepackage[utf8]{inputenc} 
+\usepackage[T1]{fontenc} % fonts to encode unicode
+\usepackage{times}
+\usepackage{pdfpages}
+%\usepackage{color}
+%\usepackage{calc}
+\usepackage{url}
+%\usepackage{xcolor}
+\pagestyle{plain}
+
+
+\usepackage[colorlinks,
+%%% EDIT TITLE: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            pdftitle={Proceedings of the 13th International Conference on Computational Semantics - Long Papers},
+            pdfauthor={Association for Computational Linguistics},
+            %pdfsubject={...},
+            %pdfkeywords={...}
+           ]{hyperref}   % hyperlinked table of contents, etc.
+
+% Textarea
+\setlength{\textwidth}{17.7cm}
+\setlength{\textheight}{25cm}
+\setlength{\oddsidemargin}{-0.6cm}
+\setlength{\topmargin}{-1.5cm}
+
+\renewcommand{\baselinestretch}{1.1}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+
+\newcommand{\putframe}{}
+\newcommand{\draft}{\renewcommand{\putframe}{\noindent\vspace*{-8pt}\textcolor{red}{\hrule height 1mm}
+\vfill\noindent\textcolor{red}{\hrule height 1mm}}}
+
+% Parameters: file name, title, authors, horizontal offset, vertical offset
+\newcommand{\paper}[5]{%
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{section}{\hspace{-17pt}#2}
+\addtocontents{toc}{$\,$\textit{#3}\vspace{5pt}}
+\includepdf[pages=-,offset={#4 #5},pagecommand={\putframe}]{#1}
+\cleardoublepage}
+
+\newcommand{\goodpaper}[3]{\paper{#1}{#2}{#3}{-0mm}{-0mm}}
+
+
+%\draft
+
+
+\begin{document}
+\pagenumbering{roman}
+%%  TITLE PAGE 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pdfbookmark{Proceedings of the 13th International Conference on Computational Semantics - Long Papers}{title}
+\thispagestyle{empty}
+
+\begin{center}
+  \LARGE IWCS 2019 \\
+  \vspace*{55mm}
+    {\bf
+    %\Huge
+    \LARGE
+    % \fontsize{38}{46}\selectfont
+    Proceedings of the 13th International Conference on \\ Computational Semantics - Long Papers\\
+    \hspace*{1cm}\\ \hspace*{1cm} \\
+    \hspace*{1cm} \\ \hspace*{1cm}\\
+    \hspace*{1cm}\\
+    \vspace{2cm}
+    %\Huge
+    \LARGE
+    % Proceedings of the Conference, Long Papers\\
+    \vspace{2cm}
+    \hspace*{1cm}} \\ % Full Volume
+    %\vspace{75mm}
+    \vspace{43mm}
+    \LARGE
+    23--27 May, 2019\\
+    University of Gothenburg \\
+    Gothenburg, Sweden
+  \end{center}
+
+\clearpage
+
+%% DETAILS 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pdfbookmark{ISBN}{isbn}
+\thispagestyle{empty}
+
+% INCLUDE SPONSOR LOGOS HERE.  Upload your images with a template set.
+% Then, for a file called ``logo.png'', you would use a line like the
+% the following:
+%
+% \includegraphics[width=2.5cm]{../templates/logo.png}
+\includegraphics[width=4.5cm]{pics/CLASP_Ordbild_orange.pdf} \quad \includegraphics[width=2.5cm]{pics/gothenburg.jpg} \quad \includegraphics[width=2.5cm]{pics/mlt.png}  \quad \includegraphics[width=4.5cm]{pics/talkamatic.png} 
+
+
+\vspace*{3.5in}
+\large
+\noindent
+\copyright 2019 The Association for Computational Linguistics\\
+\hspace*{6.5mm} \\
+
+\vspace*{0.6in}
+\noindent Order copies of this and other ACL proceedings from: \\
+\vspace*{3mm}
+
+\begin{tabular}{ll}
+\ \ \ \ \ \ & Association for Computational Linguistics (ACL)\\
+& 209 N. Eighth Street\\
+& Stroudsburg, PA 18360\\
+& USA\\
+& Tel: +1-570-476-8006\\
+& Fax: +1-570-476-0860\\
+&{\tt acl@aclweb.org}\\
+\end{tabular}
+
+\vspace*{6mm}
+\noindent ISBN 978-1-950737-19-2\\
+% This is the ISBN for a main proceedings -- Volume 1.
+% \noindent ISBN 978-1-945626-01-2 (Volume 2)\\
+% This is the ISBN for  main proceedings -- Volume 2.
+% Use the right ISBN for your proceedings
+
+
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\pdfbookmark{Preface}{preface}
+
+%\section*{Preface}
+
+\begin{center}
+  {\Large \bf Introduction}
+\end{center}
+
+\vspace*{0.5cm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% INSERT YOUR INTRO HERE
+% Welcome to the ACL Workshop on Unresolved Matters. We received
+% 17 submissions, and due to a rigerous review process, we rejected 16. 
+
+Welcome to the 13th edition of the International Conference on
+Computational Semantics (IWCS 2019) in Gothenburg.  The aim of IWCS is
+to bring together researchers interested in any aspects of the
+annotation, representation and computation of meaning in natural
+language, whether this is from a lexical or structural semantic
+perspective. It embraces both symbolic and machine learning approaches
+to computational semantics, and everything in between. This is
+reflected in the themes of the sessions which take place over full 3
+days. The programme starts with formal and grammatical approaches to
+the representation and computation of meaning, interaction of these
+approaches with distributional approaches, explore the issues related
+to entailment, semantic relations and frames, and unsupervised
+learning of word embeddings and semantic representations, including
+those that involve information from other modalities such as
+images. Overall, the papers capture a good overview of different
+angles from which the computational approach to natural language
+semantics can be studied.
+
+The talks of our three keynote speakers also reflect these themes. The
+work of Mehrnoosh Sadrzadeh focuses on combination categorial grammars
+with word- and sentence embeddings for disambiguation of sentences
+with VP ellipsis. The work of Ellie Pavlick focuses on the evaluation
+of the state-of-the art data-driven models of language for what they
+``understand'' in terms of inference and what is their internal
+structure. Finally, the work of Raffaella Bernardi focuses on
+conversational agents that learn grounded language in visual
+information through interactions with other agents. We are delighted
+they have accepted our invitation and we are looking forward to their
+talks. We include the abstract of their talks in this volume.
+
+In total, we accepted 25 long papers (51\% of submissions), 10 short
+papers (44\% of submissions) and 7 student papers (54\% of
+submissions) following the recommendations of our peer reviewers. Each
+paper was reviewed by three experts. We are extremely grateful to the
+Programme Committee members for their detailed and helpful
+reviews. The long and student papers will be presented either as talks
+or posters, while short papers will be presented as posters. Overall,
+there are 7 sessions of talks and 2 poster sessions (introduced by
+short lighting talks) which we organised according to the progression
+of the themes over 3 days, starting each day with a keynote talk. The
+sessions are organised in a way to allow plenty of time in between to
+allow participants to initiate discussions over a Swedish \emph{fika}.
+
+To encourage a broader participation of students we organised a
+student track where the papers have undergone the same quality review
+as long papers but at the same time the reviewers were instructed to
+provide comments that are beneficial to their authors to develop their
+work. To this end we also awarded a Best Student Paper Award.
+
+The conference is preceded by 5 workshops on semantic annotation,
+meaning relations, types and frames, vector semantics and dialogue,
+and on interactions between natural language processing and
+theoretical computer science. In addition to the workshops, this year
+there is also a shared task on semantic parsing. The workshops and the
+shared task will take place over the two days preceding the
+conference.
+
+There will be two social events. A reception which is sponsored by the City
+of Gothenburg will be opened by the Lord Mayor of Gothenburg and will take
+place on the evening of the second day of the workshops and before the
+main conference. A conference dinner will take place in Liseberg
+Amusement Park where participants will also get a chance to try some
+of their attractions.
+
+IWCS 2019 has received general financial support (covering over a half
+of the costs) from the Centre for Linguistics Theory and Studies in
+Probability (CLASP) which in turn is financed by a grant from the
+Swedish Research Council (VR project 2014-39) and University of
+Gothenburg. CLASP also hosts the event. We are also grateful to the
+Masters Programme in Language Technology (MLT) at the University of
+Gothenburg, Talkamatic AB and the City of Gothenburg for their
+financial support.
+
+We very much hope that you will have an enjoyable and inspiring time!
+
+\vspace{20pt}
+\hfill Simon Dobnik, Stergios Chatzikyriakidis, and Vera Demberg
+
+\hfill Gothenburg \& Saarbrücken
+
+\hfill May 2019
+
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\pdfbookmark{Programme Committee}{pc}
+
+%\begin{center}
+%  {\Large \bf Organizers}
+%\end{center}
+
+\vspace*{0.5cm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{description}
+% \item{\bf Organizers:}\vspace{2mm} \\
+% John Doe, Univeristy of Southern Atlantis\\
+% Jane Example, ACME Research Labs
+
+\item{\bf Organisers:}\vspace{2mm} \\
+  \emph{Local Chairs:} Stergios Chatzikyriakidis and Simon Dobnik \\
+  \emph{Program Chairs:} Stergios Chatzikyriakidis, Vera Demberg, and Simon Dobnik \\
+  \emph{Workshops Chair:} Asad Sayeed \\
+  \emph{Student Track Chairs:} Vlad Maraev and Chatrine Qwaider \\
+  \emph{Sponsorships Chair:} Staffan Larsson \\
+  
+\vspace{3mm}
+\item{\bf Program Committee:}\vspace{2mm} \\
+Lasha Abzianidze, Laura Aina, Maxime Amblard, Krasimir Angelov, Emily M. Bender, Raffaella Bernardi, Jean-Philippe   Bernardy , Rasmus Blanck, Gemma   Boleda, Alessandro   Bondielli, Lars   Borin, Johan Bos, Ellen   Breitholtz, Harry Bunt, Aljoscha  Burchardt, Nicoletta Calzolari, Emmanuele Chersoni, Philipp Cimiano, Stephen  Clark, Robin Cooper, Philippe  de Groote, Vera   Demberg, Simon  Dobnik, Devdatt   Dubhashi, Katrin  Erk, Arash   Eshghi, Raquel  Fernández, Jonathan  Ginzburg, Matthew Gotham, Eleni   Gregoromichelaki, Justyna Grudzinska, Gözde Gül Şahin, Iryna  Gurevych , Dag  Haug, Aurelie   Herbelot, Julian  Hough, Christine  Howes, Elisabetta Jezek, Richard  Johansson, Alexandre Kabbach, Lauri  Karttunen, Ruth   Kempson, Mathieu  Lafourcade, Gabriella   Lapesa, Shalom  Lappin, Staffan   Larsson, Gianluca Lebani, Kiyong  Lee, Alessandro   Lenci, Martha   Lewis, Maria Liakata, Sharid   Loáiciga, Zhaohui Luo, Moritz  Maria, Aleksandre Maskharashvili, Stephen   Mcgregor, Louise  McNally, Bruno  Mery, Mehdi  Mirzapour, Richard   Moot, Alessandro  Moschitti, Larry  Moss, Diarmuid  O Seaghdha, Sebastian   Pado, Ludovica  Pannitto, Ivandre Paraboni, Lucia C.   Passaro, Sandro   Pezzelle, Manfred Pinkal, Paul Piwek, Massimo  Poesio, Sylvain   Pogodalla, Christopher  Potts, Stephen  Pulman, Matthew   Purver, James   Pustejovsky, Alessandro   Raganato, Giulia  Rambelli, Allan   Ramsay, Aarne   Ranta, Christian  Retoré, Martin  Riedl, Roland   Roller, Mehrnoosh Sadrzadeh, Asad   Sayeed, Tatjana   Scheffler, Sabine Schulte Im Walde, Marco S. G.   Senaldi, Manfred  Stede, Matthew  Stone, Allan Third, Kees  Van  Deemter, Eva Maria  Vecchi, Carl Vogel, Ivan  Vulić, Bonnie   Webber, Roberto   Zamparelli
+
+% Sandy Critical, Institute for Analysis (USA)\\
+% Larry Feelgood, Univeristy of Entenhausen (Germany)\\
+% Benedict Sixteen, Vatican University (Holy Sea)
+
+% \vspace{3mm}
+% \item{\bf Additional Reviewers:} \vspace{2mm} \\
+% Gary Lastminute, Emergency Relief Lab (Switzerland)
+
+\vspace{3mm}
+\item{\bf Invited Speakers:}\vspace{2mm} \\
+  % James Goodword, Academy of Hysterical Laughter
+  Mehrnoosh Sadrzadeh, Queen Mary, University of London \\
+  Ellie Pavlick,  Brown University \\
+  Raffaella Bernardi, University of Trento
+
+% Panelists
+
+% Invited Paper
+
+\end{description}
+
+
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pdfbookmark{Invited talks}{invited}
+
+%\section*{Invited talks}
+
+\begin{center}
+  {\Large \bf Invited Talks}
+\end{center}
+
+\vspace*{0.5cm}
+
+\textbf{Mehrnoosh Sadrzadeh: Ellipsis in Compositional Distributional Semantics}
+
+Ellipsis is a natural language phenomenon where part of a sentence is missing and its information must be recovered from its surrounding context, as in ``Cats chase dogs and so do foxes.''. Formal semantics offers different methods for resolving ellipsis and recovering the missing information, but the problem has not been considered for distributional semantics, where words have vector embeddings and combinations thereof provide embeddings for sentences. In elliptical sentences these combinations go beyond linear as copying of elided information is necessary. I will talk about recent results in our NAACL 2019 paper, joint with G. Wijnholds, where we develop different models for embedding VP-elliptical sentences using modal sub-exponential categorial grammars. We extend existing verb disambiguation and sentence similarity datasets to ones containing elliptical phrases and evaluate our models on these datasets for a variety of linear and non-linear combinations. Our results show that indeed resolving ellipsis improves the performance of vectors and tensors on these tasks and it also sheds some light on disambiguating their sloppy and strict  readings.
+
+\bigskip
+
+\textbf{Ellie Pavlick: What Should Constitute Natural Language ``understanding''?}
+
+Natural language processing has become indisputably good over the past few years. We can perform retrieval and question answering with purported super-human accuracy, and can generate full documents of text that seem good enough to pass the Turing test. In light of these successes, it is tempting to attribute the empirical performance to a deeper "understanding" of language that the models have acquired. Measuring natural language "understanding", however, is itself an unsolved research problem. In this talk, I will discuss recent work which attempts to illuminate what it is that state-of-the-art models of language are capturing. I will describe approaches which evaluate the models' inferential behaviour, as well as approaches which rely on inspecting the models' internal structure directly. I will conclude with results on human's linguistic inferences, which highlight the challenges involved with developing prescriptivist language tasks for evaluating computational models. 
+
+\bigskip
+
+\textbf{Raffaella Bernardi: Beyond Task Success: A Closer Look at Jointly Learning to See, Ask,
+and GuessWhat}
+
+The development of conversational agents that ground language into visual information is a challenging problem that requires the integration of dialogue management skills with multimodal understanding. Recently, visual dialogue settings have entered the scene of the Machine Learning and Computer Vision communities thanks to the construction of visually grounded human-human dialogue datasets against which Neural Network models (NNs) have been challenged. I will present our work on GuessWhat?! in which two NN agents interact to each other so that one of the two (the Questioner), by asking questions to the other (the Answerer), can guess which object the Answerer has in mind among all the entities in a given image (GuessWhat?!).  I will present our Questioner model: it encodes both visual and textual inputs, produces a multimodal representation, generates natural language questions, understands the Answerers' responses and guesses the object. I will compare our model's dialogues with models that exploit much more complex learning paradigms, like Reinforcement Learning, showing that more complex machine learning methods do not necessarily correspond to better dialogue quality or even better quantitative performance. The talk is based on work available at \url{https://vista-unitn-uva.github.io/}.
+
+
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\pdfbookmark{Table of Contents}{toc}
+\setlength{\parskip}{0pt}
+
+\renewcommand{\contentsname}{\mbox{}\\[-108pt]\noindent\textbf{\Large
+    Table of Contents}\\[-28pt]}
+\tableofcontents
+\cleardoublepage
+
+\pagenumbering{arabic}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \pdfbookmark{Invited Talks}{invited}
+% \thispagestyle{empty}
+% \mbox{}\vfill
+% \begin{center}
+% \Huge \bf Invited Talks
+% \end{center}
+% \mbox{}\vfill
+
+% \clearpage
+
+% \addtocontents{toc}{\vspace{10pt} $\,$\textbf{Invited Talks}\vspace{5pt}}
+ 
+
+
+% \pdfbookmark{Full Papers}{papers}
+% \thispagestyle{empty}
+% \mbox{}\vfill
+% \begin{center}
+% \Huge \bf Full Papers
+% \end{center}
+% \mbox{}\vfill
+
+% \clearpage
+
+% \addtocontents{toc}{{}\\[10pt] \textbf{Full Papers}\vspace{5pt}}
+
+
+
+% \pdfbookmark{Poster Abstracts}{posters}
+% \thispagestyle{empty}
+% \mbox{}\vfill
+% \begin{center}
+% \Huge \bf Poster Abstracts
+% \end{center}
+% \mbox{}\vfill
+
+% \clearpage
+
+% \addtocontents{toc}{{}\\[10pt] \textbf{Poster Abstracts}\vspace{5pt}}
+
+% \goodpaper{../pdf/IWCS_2019_paper_1.pdf}{Temporal and Aspectual Entailment}%
+% {Thomas Kober, Sander Bijl de Vroe and Mark Steedman}
+
+% \goodpaper{../pdf/IWCS_2019_paper_3.pdf}{Re-Ranking Words to Improve Interpretability of Automatically Generated Topics}%
+% {Areej Alokaili, Nikolaos Aletras and Mark Stevenson}
+
+\include{all_papers}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+\thispagestyle{empty}
+\mbox{}
+% \clearpage
+% \thispagestyle{empty}
+% \pagecolor{myred}
+% \mbox{}
+
+\end{document}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
