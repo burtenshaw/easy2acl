@@ -6,6 +6,7 @@
 # Original Author: Nils Blomqvist
 # Forked/modified by: Asad Sayeed
 # Further modifications and docs (for 2019 Anthology): Matt Post
+# Index for LaTeX book proceedings: Mehdi Ghanimifard and Simon Dobnik
 #
 # Please see the documentation in the README file at http://github.com/acl-org/easy2acl.
 
@@ -196,7 +197,7 @@ for paper_id, entry in enumerate(accepted):
         print(bib_string, file=out_bib)
         print('CREATED', bib_path)
 
-# Create
+# Create an index for LaTeX book proceedings
 if not os.path.exists('book-proceedings'):
     os.makedirs('book-proceedings')
 
