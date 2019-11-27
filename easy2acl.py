@@ -49,7 +49,7 @@ for key in 'abbrev title booktitle month year location publisher chairs bib_url'
 
 match = re.match(r'https://www.aclweb.org/anthology/([A-Z])(\d\d)-(\d+)%0(\d+)d', metadata['bib_url'])
 if match is None:
-    print("Fatal: bib_url field ({}) in 'meta' file has wrong pattern".format(metadata['bib_url']), file=sys.stderr)
+    print(metadata)
     sys.exit(1)
 anthology_collection, anthology_year, anthology_volume, anthology_paper_width = match.groups()
 

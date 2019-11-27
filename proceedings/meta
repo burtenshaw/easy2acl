@@ -1,0 +1,13 @@
+abbrev ccnlg
+type Workshop
+title 4th Workshop on Computational Creativity in Language Generation
+url http://www.ccnlg.org/
+booktitle Proceedings of the 4th Workshop on Computational Creativity in Language Generation
+month 29 October--3 November
+year 2019
+location Tokyo, Japan
+publisher Association for Computational Linguistics
+chairs Burtenshaw, Benjamin
+chairs Manjavacas, Enrique
+bib_url https://www.aclweb.org/anthology/W19-82%02d
+sig sigsem
